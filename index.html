@@ -117,7 +117,7 @@ formData.append("media", file);
 
 try{
 
-const response = await fetch("/api/verificar",{
+const response = await fetch("/.netlify/functions/verificar",{
 method:"POST",
 body:formData
 });
