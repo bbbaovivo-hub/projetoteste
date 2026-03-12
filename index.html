@@ -8,13 +8,14 @@
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#0f0f0f;
 color:white;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+margin:0;
 }
 
 .container{
@@ -76,7 +77,7 @@ font-weight:bold;
 
 <br>
 
-<button onclick="verificarImagem()">Analisar imagem</button>
+<button id="btnVerificar">Analisar imagem</button>
 
 <div id="resultado"></div>
 
@@ -87,11 +88,11 @@ font-weight:bold;
 const inputImagem = document.getElementById("imagem");
 const preview = document.getElementById("preview");
 const resultado = document.getElementById("resultado");
+const btn = document.getElementById("btnVerificar");
 
 inputImagem.addEventListener("change", () => {
 
 const file = inputImagem.files[0];
-
 if(!file) return;
 
 preview.src = URL.createObjectURL(file);
@@ -99,15 +100,15 @@ preview.style.display = "block";
 
 });
 
+btn.addEventListener("click", verificarImagem);
+
 async function verificarImagem(){
 
 const file = inputImagem.files[0];
 
 if(!file){
-
 alert("Selecione uma imagem primeiro");
 return;
-
 }
 
 resultado.innerText = "Analisando imagem...";
@@ -122,20 +123,24 @@ method:"POST",
 body:formData
 });
 
+if(!response.ok){
+throw new Error("Erro no servidor");
+}
+
 const data = await response.json();
 
 console.log(data);
 
-let nudez = data.nudity;
-let gore = data.gore;
+const nudez = data.nudity || {};
+const gore = data.gore || {};
 
-let nudeScore = Math.max(
-nudez.sexual_activity,
-nudez.sexual_display,
-nudez.erotica
+const nudeScore = Math.max(
+nudez.sexual_activity || 0,
+nudez.sexual_display || 0,
+nudez.erotica || 0
 );
 
-let goreScore = gore.prob;
+const goreScore = gore.prob || 0;
 
 if(nudeScore > 0.6 || goreScore > 0.6){
 
@@ -159,4 +164,4 @@ resultado.innerHTML = "⚠️ Erro ao conectar com o servidor";
 </script>
 
 </body>
-</html>
+  </html>
