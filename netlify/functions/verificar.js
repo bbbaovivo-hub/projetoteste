@@ -1,36 +1,35 @@
-import fetch from "node-fetch";
-import FormData from "form-data";
+const fetch = require("node-fetch");
+const FormData = require("form-data");
 
-export const handler = async (event) => {
+exports.handler = async function (event) {
 
 try{
 
-const body = JSON.parse(event.body);
+const body = Buffer.from(event.body, "base64");
 
-const form = new FormData();
-
-form.append("media", body.media);
-form.append("models", "nudity-2.1,gore-2.0");
-form.append("api_user", process.env.API_USER);
-form.append("api_secret", process.env.API_SECRET);
+const formData = new FormData();
+formData.append("media", body, { filename: "image.jpg" });
+formData.append("models", "nudity-2.1,gore-2.0");
+formData.append("api_user", process.env.API_USER);
+formData.append("api_secret", process.env.API_SECRET);
 
 const response = await fetch("https://api.sightengine.com/1.0/check.json",{
 method:"POST",
-body:form
+body:formData
 });
 
 const data = await response.json();
 
-return{
+return {
 statusCode:200,
 body:JSON.stringify(data)
 };
 
 }catch(error){
 
-return{
+return {
 statusCode:500,
-body:JSON.stringify({error:"Erro na verificação"})
+body:JSON.stringify({error:"Erro ao verificar imagem"})
 };
 
 }
