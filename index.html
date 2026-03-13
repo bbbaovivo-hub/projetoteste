@@ -137,6 +137,7 @@ throw new Error("Erro no servidor");
 const data = await response.json();
 
 console.log(data);
+  resultado.innerText = JSON.stringify(data);
 
 const nudez = data.nudity || {};
 const gore = data.gore || {};
