@@ -58,6 +58,7 @@ display:none;
 margin-top:20px;
 font-size:18px;
 font-weight:bold;
+white-space:pre-wrap;
 }
 
 </style>
@@ -122,7 +123,7 @@ const base64 = reader.result.split(",")[1];
 
 try{
 
-const response = await fetch("/.netlify/functions/verificar",{
+const response = await fetch("/api/verificar",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -138,7 +139,7 @@ const data = await response.json();
 
 console.log(data);
 resultado.innerText = JSON.stringify(data, null, 2);
-  
+
 const nudez = data.nudity || {};
 const gore = data.gore || {};
 
@@ -176,4 +177,4 @@ reader.readAsDataURL(file);
 </script>
 
 </body>
-  </html>
+                                           </html>
